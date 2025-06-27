@@ -1,0 +1,7 @@
+torch
+scipy
+numpy
+pandas
+scikit-learn
+setuptools
+scanpy

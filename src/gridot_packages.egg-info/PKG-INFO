@@ -1,0 +1,5 @@
+Metadata-Version: 2.1
+Name: gridot-packages
+Version: 0.1.1
+Summary: GRN inferences with Granger Graph and Optimal transport
+License: GPLv3
