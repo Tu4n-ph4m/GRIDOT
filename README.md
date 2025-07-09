@@ -18,8 +18,9 @@ GRIDOT (1)incorporates Optimal Transport to create pseudo-multiomic dataset from
 
 ## INSTALLATION
 
+'''
 pip install GRIDOT
-
+'''
 
 ## DOCUMENTATION
 We provide tutorials for GRN inferences:
