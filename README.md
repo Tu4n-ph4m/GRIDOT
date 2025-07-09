@@ -5,6 +5,8 @@ GRIDOT is a Gene regulatory network inference using Optimal Transport and Graph-
 
 GRIDOT (1)incorporates Optimal Transport to create pseudo-multiomic dataset from separate scRNA-seq and scATAC-seq and (2) uses Granger causality to infer transcription factors (TFs) and gene relationship.
 
+![](figs/gridot_pipeline.png)
+
 
 
 
