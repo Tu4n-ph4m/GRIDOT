@@ -23,12 +23,17 @@ from scipy.sparse import issparse
 
 
 def gene_info(x):
-    # Extract gene names
-#     print(x)
+   
     gene_name = list(filter(lambda x: 'gene_name' in x,  x.split(";")))[0].split("=")[1]
     gene_type = list(filter(lambda x: 'gene_type' in x,  x.split(";")))[0].split("=")[1]
     level = int(list(filter(lambda x: 'level' in x,  x.split(";")))[0].split("=")[1])
     return (gene_name, gene_type, level)
+
+def gene_info_dmel(x):
+    g_name = list(filter(lambda x: 'Name' in x,  x.split(";")))[0].split("=")[1]
+    g_type = list(filter(lambda x: 'biotype' in x,  x.split(";")))[0].split("=")[1]
+
+    return (g_name, g_type)
 
 def update_anndata_obs(rna_adata,gencode_genes):
     merged_df = rna_adata.var.merge(gencode_genes, left_on='features', right_on='gene_name',how = 'left')
@@ -55,8 +60,24 @@ def gencode_reading(gff_file,gene_list):
     gencode_genes = gencode_genes.loc[gencode_genes.gene_name.isin(gene_list)]
     gencode_genes = gencode_genes[~gencode_genes['seqname'].str.contains('M')]
     gencode_genes = gencode_genes.loc[gencode_genes.gene_name.isin(gene_list)]
-    # gencode_genes['seqname'] = gencode_genes['seqname'].str.replace('chr', '')
 
+    return gencode_genes,gencode_genes['gene_name'].to_list()
+
+def gencode_reading_dmel(gff_file,gene_list):
+    gencode = pd.read_table(gff_file, comment="#",
+                    sep = "\t", names = ['seqname', 'source', 'feature', 'start' , 'end', 'score',
+                                         'strand', 'frame', 'attribute'])
+    gencode_genes = gencode[(gencode.feature == "gene")][['seqname', 'start', 'end', 'attribute']].copy().reset_index().drop('index', axis=1) # Extract genes
+
+    gencode_genes["gene_name"], gencode_genes["gene_type"] = zip(*gencode_genes.attribute.apply(lambda x: gene_info_dmel(x)))
+    gencode_genes = gencode_genes.drop_duplicates(subset='gene_name', keep='first')
+#### remove chM
+    gencode_genes = gencode_genes.loc[gencode_genes.gene_name.isin(gene_list)]
+    gencode_genes = gencode_genes[~gencode_genes['seqname'].str.contains('mito')]
+    gencode_genes = gencode_genes.loc[gencode_genes.gene_name.isin(gene_list)]
+#     gencode_genes['seqname'] = gencode_genes['seqname'].str.replace('chr', '')
+#     gencode_genes['chr_no']  = gencode_genes['seqname']
+#     gencode_genes['txstart'] = gencode_genes['start']
     return gencode_genes,gencode_genes['gene_name'].to_list()
 
 def preprocessing_adata_celltype(atac_anndata, rna_anndata,gene_file,celltype):
@@ -119,6 +140,38 @@ def preprocessing_adata(atac_anndata, rna_anndata,gene_file):
     
     print('Adding start site to meta file...')
     gencode_genes,filtered_genes = gencode_reading(gene_file,rna_adata.var['features'])
+    rna_adata = rna_adata[:, filtered_genes]
+    rna_adata.var = update_anndata_obs(rna_adata,gencode_genes)
+    
+    return atac_adata, rna_adata
+
+def preprocessing_adata_dmel(atac_anndata, rna_anndata,gene_file):
+    print(f"Pre-processing scATAC-seq...")
+    atac_adata = atac_anndata.copy()
+    rna_adata = rna_anndata.copy()
+
+    # Find the intersection of indices
+    common_indices = atac_adata.obs.index.intersection(rna_adata.obs.index)
+
+    # Subset both AnnData objects to keep only the common indices
+    atac_adata = atac_adata[common_indices]
+    rna_adata = rna_adata[common_indices]
+
+#     atac_adata = atac_adata[atac_adata.obs['label']==celltype]
+    sc.pp.filter_cells(atac_adata, min_genes=100)
+    sc.pp.filter_genes(atac_adata, min_cells=3)
+    print(atac_adata)
+    
+    print(f"Pre-processing scRNA-seq...")
+    rna_adata.var['features'] = rna_adata.var.index
+#     rna_adata = rna_adata[rna_adata.obs['label']==celltype]
+    
+    sc.pp.filter_cells(rna_adata, min_genes=100)
+    sc.pp.filter_genes(rna_adata, min_cells=3)
+    print(rna_adata)
+    
+    print('Adding start site to meta file...')
+    gencode_genes,filtered_genes = gencode_reading_dmel(gene_file,rna_adata.var['features'])
     rna_adata = rna_adata[:, filtered_genes]
     rna_adata.var = update_anndata_obs(rna_adata,gencode_genes)
     
