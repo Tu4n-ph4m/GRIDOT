@@ -22,7 +22,6 @@ GRIDOT (1)incorporates Optimal Transport to create pseudo-multiomic dataset from
 ## INSTALLATION
 
 ```
-git clone git@github.com:Tu4n-ph4m/GRIDOT.git
 python -m venv GRIDOT
 source GRIDOT/bin/activate
 git clone git@github.com:Tu4n-ph4m/GRIDOT.git
