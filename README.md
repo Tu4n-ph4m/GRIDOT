@@ -39,3 +39,10 @@ We provide tutorials for GRN inferences in two scenarios:
 [POPULATION-LEVEL](https://github.com/Tu4n-ph4m/GRIDOT/tree/main/official_tutorial/human_kidney)
 
 Datasets for tutorials can be downloaded [here](https://drive.google.com/drive/folders/1Lci6nIkM8B6ZO8i_T-Th8ah6ao_MFhmr)
+
+Original datasets can be found here:
+[SNARE-seq](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE126074)
+
+[Kidney dataset](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE185948)
+[Drosophila 14-16h embryonic dataset](https://shendure-web.gs.washington.edu/content/members/DEAP_website/public/)
+[Drosophila 3rd instar larval dataset](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE214707)
