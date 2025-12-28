@@ -1,13 +1,14 @@
 # GRIDOT
 
 
-GRIDOT is a Gene regulatory network inference using Optimal Transport and Graph-based Granger Causality
+**Abstract**
 
-GRIDOT (1)incorporates Optimal Transport to create pseudo-multiomic dataset from separate scRNA-seq and scATAC-seq 
-(2) uses Granger causality to infer CREs and gene relationship 
-(3) infers TFs-gene relationship
-(4) reconstructs networks (optional)
-
+Understanding how genes are regulated requires linking transcriptional programs to underlying chromatin states, yet most single-cell studies profile these modalities separately. We introduce **GRIDOT**, a framework for reconstructing gene regulatory networks by integrating single-cell RNA-seq and ATAC-seq data without requiring paired measurements. GRIDOT aligns transcriptional and chromatin accessibility profiles to create a pseudo-multiomic representation, enabling the inference of directed regulatory relationships. The method identifies cis-regulatory element–gene and transcription factor–gene interactions and assembles them into regulatory networks at cell-type–specific or population scales. By connecting chromatin regulation to gene expression in a unified framework, GRIDOT facilitates biological interpretation of regulatory mechanisms from unpaired single-cell multiomic data.
+GRIDOT  
+(1) integrates optimal transport to construct a pseudo-multiomic representation from independently generated scRNA-seq and scATAC-seq data;  
+(2) applies Granger causality to infer regulatory relationships between cis-regulatory elements and target genes;  
+(3) identifies transcription factor-gene regulatory interactions;  
+(4) optionally reconstructs gene regulatory networks at cell-type–specific or population levels.
 ![](figs/gridot_pipeline.png)
 
 
